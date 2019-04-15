@@ -10,21 +10,15 @@ namespace AClassyProblem
         {
             int numberOfCases = int.Parse(Console.ReadLine());
             int numberOfPeople;
-            int maxSubclasses = 10;
-            List<Input> input = new List<Input>();
             List<Person> people = new List<Person>();
 
             for (int i = 0; i < numberOfCases; i++)
             {
                 numberOfPeople = int.Parse(Console.ReadLine());
-                for (int j = 0; j < numberOfPeople; j++)
-                {
-                    input.Add(new Input(Console.ReadLine()));
-                }
 
                 for (int j = 0; j < numberOfPeople; j++)
                 {
-                    people.Add(new Person(input[j], maxSubclasses));
+                    people.Add(new Person(Console.ReadLine().Split(' ')));
                 }
 
                 people = people
@@ -41,13 +35,8 @@ namespace AClassyProblem
                     .ThenBy(q => q.Name)
                     .ToList();
 
-                for (int j = 0; j < numberOfPeople; j++)
-                {
-                    Console.WriteLine(people[j].Name);
-                }
-
+                Console.WriteLine(string.Join("\n",people));
                 Console.WriteLine("==============================");
-                input.Clear();
                 people.Clear();
             }
         }
@@ -55,15 +44,15 @@ namespace AClassyProblem
 
     class Person
     {
-        public Person(Input input, int maxSubclasses)
+        public Person(string[] input)
         {
-            Name = input.Name;
-            Class = SetClass(input.Class, maxSubclasses);
+            Name = input[0].Substring(0, input[0].Length - 1);
+            Class = SetClass(input[1].Split('-'));
         }
 
-        private int[] SetClass(string[] @class, int maxSubclasses)
+        private int[] SetClass(string[] @class)
         {
-            var returnValue = new int[maxSubclasses];
+            var returnValue = new int[10];
             for (int i = 0; i < @class.Length; i++)
             {
                 if (@class[i] == "upper")
@@ -82,19 +71,12 @@ namespace AClassyProblem
             return returnValue;
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public string Name { get; set; }
         public int[] Class { get; set; }
-    }
-
-    class Input
-    {
-        public Input(string input)
-        {
-            var temp = input.Split(' ');
-            Name = temp[0].Substring(0, temp[0].Length - 1);
-            Class = temp[1].Split('-');
-        }
-        public string Name { get; set; }
-        public string[] Class { get; set; }
     }
 }
